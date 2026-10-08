@@ -35,7 +35,7 @@ const GRAVITY = 2100;
 export interface GlassScene {
   /** O vidro e o logo surgem. */
   fadeIn: (ms: number) => void;
-  /** A pancada: o vidro inteiro troca pelos cacos, com as bordas aparecendo. */
+  /** O vidro inteiro troca pelos cacos, com as bordas aparecendo. */
   impact: () => void;
   /** Os cacos se soltam e caem. Resolve quando saíram todos da tela. */
   release: (fast: boolean) => Promise<void>;
@@ -200,7 +200,6 @@ export async function createGlassScene(
     });
   const faceMat = glass(0x142133, 0);
   const edgeMat = glass(0x9fe6ff, 0);
-  const chipMat = glass(0xe6f6ff, 0.9);
 
   const logo = await drawLogo(w, h);
   const logoMat = new MeshBasicMaterial({ map: logo.texture, transparent: true, opacity: 0, depthWrite: false, toneMapped: false });
@@ -249,18 +248,6 @@ export async function createGlassScene(
     }
     shardsGroup.add(mesh);
     return { mesh, logo: piece, shard, delay: 0, vx: 0, vy: 0, vz: 0, wx: 0, wy: 0, wz: 0, live: false, gone: false };
-  });
-
-  // lascas pequenas que saltam do ponto de impacto
-  const chips: Body[] = fracture.chips.map((shard) => {
-    const shape = new Shape(shard.points.map((p) => new Vector2(p[0] - shard.cx, shard.cy - p[1])));
-    const geo = new ExtrudeGeometry(shape, { depth: THICKNESS * 0.7, bevelEnabled: false });
-    geo.translate(0, 0, -THICKNESS * 0.35);
-    const mesh = new Mesh(geo, chipMat);
-    mesh.position.set(shard.cx - w / 2, h / 2 - shard.cy, 0);
-    mesh.visible = false;
-    shardsGroup.add(mesh);
-    return { mesh, logo: null, shard, delay: 0, vx: 0, vy: 0, vz: 0, wx: 0, wy: 0, wz: 0, live: false, gone: false };
   });
 
   // laço de desenho
@@ -329,15 +316,11 @@ export async function createGlassScene(
 
     if (released) {
       bodies.forEach((b) => stepBody(b, 0.995));
-      chips.forEach((b) => stepBody(b, 0.992));
-      const allGone = bodies.every((b) => b.gone) && chips.every((b) => b.gone || !b.live);
+      const allGone = bodies.every((b) => b.gone);
       if (allGone || t - releaseT > 4) {
         resolveRelease?.();
         resolveRelease = null;
       }
-    } else if (impactAtT >= 0) {
-      // as lascas saem na hora da pancada, antes de o resto do vidro cair
-      chips.forEach((b) => stepBody(b, 0.992));
     }
 
     renderer.render(scene, camera);
@@ -355,20 +338,6 @@ export async function createGlassScene(
       impactAtT = t;
       pane.visible = false;
       shardsGroup.visible = true;
-      // as lascas ganham velocidade para fora, com um impulso para a câmera
-      chips.forEach((b) => {
-        const ang = Math.atan2(b.shard.cy - impactAt.y, b.shard.cx - impactAt.x);
-        const sp = rand(260, 780);
-        b.vx = Math.cos(ang) * sp;
-        b.vy = -Math.sin(ang) * sp + rand(60, 260);
-        b.vz = rand(80, 520);
-        b.wx = rand(-14, 14);
-        b.wy = rand(-14, 14);
-        b.wz = rand(-10, 10);
-        b.delay = 0;
-        b.live = true;
-        b.mesh.visible = true;
-      });
       releaseT = t;
     },
     release(fast) {
@@ -401,7 +370,7 @@ export async function createGlassScene(
       scene.traverse((o) => {
         if (o instanceof Mesh) o.geometry.dispose();
       });
-      [faceMat, edgeMat, chipMat, logoMat].forEach((m) => m.dispose());
+      [faceMat, edgeMat, logoMat].forEach((m) => m.dispose());
       logo.texture.dispose();
       envTarget.dispose();
       pmrem.dispose();

@@ -42,7 +42,7 @@ const wait = (ms: number) => new Promise<void>((r) => window.setTimeout(r, ms));
 const rand = (min: number, max: number) => min + Math.random() * (max - min);
 
 /**
- * Abertura: a tela escurece, o logo aparece gravado num vidro e o vidro leva uma pancada, racha e cai
+ * Abertura: a tela escurece, o logo aparece gravado num vidro e o vidro racha e cai
  * em cacos 3D (WebGL, com espessura, reflexo e gravidade). O site aparece por trás. É uma animação só.
  * Se o WebGL não estiver disponível, a abertura é pulada e o site abre direto.
  */
@@ -60,8 +60,6 @@ export function Intro() {
   const host = useRef<HTMLDivElement>(null);
   const cracks = useRef<SVGSVGElement>(null);
   const crackRefs = useRef<(SVGPathElement | null)[]>([]);
-  const flash = useRef<HTMLDivElement>(null);
-  const ringEl = useRef<HTMLDivElement>(null);
   const skip = useRef<() => void>(() => undefined);
   // a cena começa uma vez só: mudar de fase no meio da abertura não pode desmontá-la
   const playOnce = useRef(phase === "playing");
@@ -110,25 +108,6 @@ export function Intro() {
         impacted = true;
         const k = fast ? 0.6 : 1;
 
-        // pancada: clarão, onda de choque e um tranco na tela
-        flash.current?.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 420 * k, easing: "ease-out", fill: "forwards" });
-        ringEl.current?.animate(
-          [
-            { transform: "translate(-50%,-50%) scale(0.2)", opacity: 0.9 },
-            { transform: "translate(-50%,-50%) scale(40)", opacity: 0 },
-          ],
-          { duration: 700 * k, easing: "cubic-bezier(0.1,0.7,0.2,1)", fill: "forwards" },
-        );
-        root.current?.animate(
-          [
-            { transform: "translate(0,0)" },
-            { transform: "translate(-5px,3px)" },
-            { transform: "translate(4px,-4px)" },
-            { transform: "translate(-2px,2px)" },
-            { transform: "translate(0,0)" },
-          ],
-          { duration: 280 * k, easing: "ease-out" },
-        );
         glass.impact();
 
         // rachaduras correm pelo vidro
@@ -235,18 +214,6 @@ export function Intro() {
         </g>
       </svg>
 
-      <div
-        ref={flash}
-        className="pointer-events-none absolute inset-0 opacity-0"
-        style={{
-          background: `radial-gradient(circle at ${impactAt.x}px ${impactAt.y}px, rgba(255,255,255,1), rgba(190,225,255,0.45) 9%, transparent 26%)`,
-        }}
-      />
-      <div
-        ref={ringEl}
-        className="pointer-events-none absolute size-10 rounded-full border-2 border-white/80 opacity-0"
-        style={{ left: impactAt.x, top: impactAt.y }}
-      />
     </div>
   );
 }

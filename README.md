@@ -38,7 +38,7 @@ O mapa da edição especial (vinil rosa) não foi usado de propósito: esta vers
 
 ## Abertura (`src/components/Intro.tsx`, `src/glass3d.ts` e `src/shatter.ts`)
 
-A tela escurece, o logo aparece gravado num vidro e o vidro leva uma pancada, racha e cai em cacos, e então o site aparece. É uma animação só, de uns 3 s, sem precisar tocar.
+A tela escurece, o logo aparece gravado num vidro, o vidro racha e cai em cacos, e então o site aparece. Sem clarão nem efeito extra na quebra. É uma animação só, de uns 3 s, sem precisar tocar.
 
 O vidro é 3D de verdade (WebGL, com Three.js): cada caco é uma placa com espessura, em perspectiva, com reflexo de ambiente e gravidade, e o logo quebra junto. A geometria da quebra vem de `shatter.ts` (rachaduras, cacos e lascas) e a cena de `glass3d.ts`. O Three.js é carregado só na abertura, em um arquivo separado.
 
@@ -46,6 +46,10 @@ O vidro é 3D de verdade (WebGL, com Three.js): cada caco é uma placa com espes
 - Esc, Enter, espaço ou um toque quebram o vidro na hora.
 - Não toca com "reduzir movimento" ligado no sistema, e, se o WebGL não estiver disponível, o site abre direto.
 - Tempos em `LEAD_MS` (até a pancada) e `CRACK_MS` (rachaduras antes da queda), em `Intro.tsx`. Gravidade e espessura do vidro em `glass3d.ts`.
+
+## Cursor de vidro (`src/components/GlassCursor.tsx`)
+
+Um pedaço de vidro segue o mouse sem atraso, inclina para o lado em que o mouse anda e cresce sobre botões e links. No Chrome e no Edge ele funciona como lente: amplia e entorta levemente o que passa por baixo (um filtro SVG no `backdrop-filter`). No Safari e no Firefox esse filtro não existe, então o vidro só clareia e dá brilho, sem ampliar. `MAGNIFY` e `SIZE` mudam o aumento e o tamanho. Só aparece com mouse e sem "reduzir movimento".
 
 ## Rastreamento
 

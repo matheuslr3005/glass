@@ -19,8 +19,6 @@ export interface Shard {
 
 export interface Fracture {
   shards: Shard[];
-  /** Lascas pequenas que saltam do ponto de impacto. */
-  chips: Shard[];
   /** Rachaduras radiais irregulares (do impacto até a borda). */
   spokes: string[];
   /** Pequenas ramificações que saem das rachaduras radiais. */
@@ -146,26 +144,5 @@ export function buildFracture(w: number, h: number, ix: number, iy: number, spok
     return `M${row.map(fmt).join(" L")} L${fmt(row[0]!)}`;
   });
 
-  // lascas: triângulos pequenos perto do impacto
-  const chips: Shard[] = [];
-  const chipCount = 34;
-  for (let i = 0; i < chipCount; i++) {
-    const a = rand() * Math.PI * 2;
-    const r = 4 + Math.pow(rand(), 1.6) * 150;
-    const cx = ix + Math.cos(a) * r;
-    const cy = iy + Math.sin(a) * r;
-    const size = 3 + rand() * 10;
-    const pts: [number, number][] = [0, 1, 2].map((n) => {
-      const pa = rand() * 2 + n * 2.1;
-      const pr = size * (0.5 + rand() * 0.7);
-      return [cx + Math.cos(pa) * pr, cy + Math.sin(pa) * pr];
-    });
-    const xs = pts.map((p) => p[0]);
-    const ys = pts.map((p) => p[1]);
-    const x = Math.min(...xs);
-    const y = Math.min(...ys);
-    chips.push({ id: i, points: pts, x, y, w: Math.max(...xs) - x, h: Math.max(...ys) - y, cx, cy, dist: 0 });
-  }
-
-  return { shards, chips, spokes: spokePaths, branches: branchPaths, rings: ringPaths };
+  return { shards, spokes: spokePaths, branches: branchPaths, rings: ringPaths };
 }
