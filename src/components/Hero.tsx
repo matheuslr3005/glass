@@ -94,18 +94,25 @@ export function Hero() {
             </motion.div>
           </div>
 
-          <motion.div className="glass rounded-card p-5 md:p-6" {...show(0.45)}>
+          <motion.div className="glass overflow-hidden rounded-card p-5 md:p-6" {...show(0.45)}>
             {next && date ? (
               <>
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--accent)]">Próxima noite</p>
-                <h2 className="mt-2 font-display text-4xl font-medium leading-none md:text-5xl">{next.title}</h2>
-                <p className="mt-2 text-steel">
+                {/* a arte da noite, bem ao fundo: só para dizer que está ali */}
+                <img
+                  src={next.flyer}
+                  alt=""
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-y-0 right-0 h-full w-3/4 object-cover object-[50%_28%] opacity-30 [mask-image:linear-gradient(to_left,#000_15%,transparent_95%)] [-webkit-mask-image:linear-gradient(to_left,#000_15%,transparent_95%)]"
+                />
+                <p className="relative text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--accent)]">Próxima noite</p>
+                <h2 className="relative mt-2 font-display text-4xl font-medium leading-none md:text-5xl">{next.title}</h2>
+                <p className="relative mt-2 text-steel">
                   {date.weekday}, {date.day} · abertura às {next.time}
                 </p>
-                <div className="mt-5">
+                <div className="relative mt-5">
                   <Countdown startsAt={next.startsAt} compact />
                 </div>
-                <div className="mt-5 flex flex-wrap gap-3">
+                <div className="relative mt-5 flex flex-wrap gap-3">
                   <TicketButton event={next} location="hero" />
                 </div>
               </>
