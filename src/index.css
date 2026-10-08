@@ -296,3 +296,22 @@ body {
     animation: none;
   }
 }
+
+/* planta técnica sobre vidro fosco (Mapa 3D): grade fina de projeto, marcas nos cruzamentos e grão de vidro jateado */
+.tx-blueprint {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle, rgba(127, 227, 255, 0.55) 0 2px, transparent 3px) 0 0 / 120px 120px,
+    linear-gradient(rgba(127, 227, 255, 0.17) 1px, transparent 1px) 0 0 / 120px 120px,
+    linear-gradient(90deg, rgba(127, 227, 255, 0.17) 1px, transparent 1px) 0 0 / 120px 120px,
+    linear-gradient(rgba(127, 227, 255, 0.07) 1px, transparent 1px) 0 0 / 24px 24px,
+    linear-gradient(90deg, rgba(127, 227, 255, 0.07) 1px, transparent 1px) 0 0 / 24px 24px;
+}
+.tx-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.2;
+  mix-blend-mode: overlay;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .6 0'/></filter><rect width='300' height='300' filter='url(%23n)'/></svg>");
+}

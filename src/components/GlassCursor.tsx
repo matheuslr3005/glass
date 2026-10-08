@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
 
-/** Tamanho do vidro e aumento da lente. */
-const SIZE = 150;
-const MAGNIFY = 1.45;
+/** Tamanho do vidro (parecido com o do ponteiro do sistema) e aumento da lente. */
+const SIZE = 32;
+const MAGNIFY = 1.7;
 /** Formato de caco de vidro, em % do quadrado. */
 const SHARD = [
   [14, 6],
@@ -86,7 +86,7 @@ export function GlassCursor() {
     };
     const over = (e: PointerEvent) => {
       const el = e.target instanceof Element ? e.target : null;
-      scale.set(el?.closest("a, button, [role='tab'], input, textarea, select, [data-grab]") ? 1.2 : 1);
+      scale.set(el?.closest("a, button, [role='tab'], input, textarea, select, [data-grab]") ? 1.4 : 1);
     };
     const down = () => scale.set(0.9);
     const up = () => scale.set(1);
@@ -117,7 +117,7 @@ export function GlassCursor() {
             <feImage href={lens.url} x="0" y="0" width={SIZE} height={SIZE} preserveAspectRatio="none" result="map" />
             <feDisplacementMap in="SourceGraphic" in2="map" scale={lens.scale} xChannelSelector="R" yChannelSelector="G" result="bent" />
             {/* o deslocamento amplia pixel a pixel; um leve desfoque tira o serrilhado */}
-            <feGaussianBlur in="bent" stdDeviation="0.65" />
+            <feGaussianBlur in="bent" stdDeviation="0.3" />
           </filter>
         </svg>
       )}
@@ -143,19 +143,9 @@ export function GlassCursor() {
               </linearGradient>
             </defs>
             <polygon points={OUTLINE} fill="url(#cursor-shine)" />
-            <polygon points={OUTLINE} fill="none" stroke="rgba(255,255,255,0.85)" strokeWidth="1.3" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
-            <polygon
-              points="20,14 74,8 94,44"
-              fill="none"
-              stroke="rgba(190,235,255,0.55)"
-              strokeWidth="1"
-              strokeLinejoin="round"
-              vectorEffect="non-scaling-stroke"
-            />
+            <polygon points={OUTLINE} fill="none" stroke="rgba(255,255,255,0.85)" strokeWidth="1.1" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
             <line x1="28" y1="30" x2="52" y2="12" stroke="rgba(255,255,255,0.7)" strokeWidth="1.2" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
           </svg>
-          {/* ponto de mira no centro, para clicar com precisão */}
-          <span className="absolute left-1/2 top-1/2 size-[5px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white shadow-[0_0_6px_rgba(255,255,255,0.9)]" />
         </motion.div>
       </motion.div>
     </>

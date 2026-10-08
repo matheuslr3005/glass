@@ -49,11 +49,11 @@ O vidro é 3D de verdade (WebGL, com Three.js): cada caco é uma placa com espes
 
 ## Texturas de vidro (`src/components/GlassBackdrop.tsx`)
 
-Duas seções têm textura própria, na largura toda e esmaecendo nas bordas: **After Movies** com vidro canelado (luz rosa e violeta passando por trás) e **Aluguel** com facetas de cristal (luz gelo e violeta). O canelado é só CSS (`.tx-fluted` em `index.css`); as facetas são o arquivo `public/textures/facets.svg`. As cores das luzes ficam em `GLOW`. A luz se move devagar e para com "reduzir movimento".
+Três seções têm textura própria, na largura toda e esmaecendo nas bordas: **After Movies** com vidro canelado (luz rosa e violeta passando por trás), **Mapa 3D** com uma planta técnica sobre vidro fosco (grade fina, marcas nos cruzamentos e grão, com luz verde-água e gelo) e **Aluguel** com facetas de cristal (luz gelo e violeta). O canelado é só CSS (`.tx-fluted` em `index.css`); as facetas são o arquivo `public/textures/facets.svg`. As cores das luzes ficam em `GLOW`. A luz se move devagar e para com "reduzir movimento".
 
 ## Cursor de vidro (`src/components/GlassCursor.tsx`)
 
-Um pedaço de vidro segue o mouse sem atraso, inclina para o lado em que o mouse anda e cresce sobre botões e links. No Chrome e no Edge ele funciona como lente: amplia e entorta levemente o que passa por baixo (um filtro SVG no `backdrop-filter`). No Safari e no Firefox esse filtro não existe, então o vidro só clareia e dá brilho, sem ampliar. `MAGNIFY` e `SIZE` mudam o aumento e o tamanho. Só aparece com mouse e sem "reduzir movimento".
+Um pedaço de vidro do tamanho do ponteiro do sistema segue o mouse sem atraso, inclina para o lado em que o mouse anda e cresce sobre botões e links. No Chrome e no Edge ele funciona como lente: amplia e entorta levemente o que passa por baixo (um filtro SVG no `backdrop-filter`). No Safari e no Firefox esse filtro não existe, então o vidro só clareia e dá brilho, sem ampliar. `MAGNIFY` e `SIZE` mudam o aumento e o tamanho. Só aparece com mouse e sem "reduzir movimento".
 
 ## Rastreamento
 
