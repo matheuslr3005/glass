@@ -4,6 +4,7 @@ import { KIND_COLOR, RENTAL_TYPES, SITE, SPACE_VIDEO, ZONES } from "../content";
 import { contactLink } from "../lib";
 import { track } from "../analytics";
 import { Button } from "./Button";
+import { GlassBackdrop } from "./GlassBackdrop";
 import { Reveal } from "./Reveal";
 
 type Tab = "video" | "ambientes";
@@ -159,7 +160,9 @@ export function Space() {
   ];
 
   return (
-    <section id="espaco" className="relative mx-auto max-w-7xl scroll-mt-20 px-5 py-24 md:px-8 md:py-32">
+    <section id="espaco" className="relative scroll-mt-20 overflow-clip">
+      <GlassBackdrop variant="facets" />
+      <div className="relative mx-auto max-w-7xl px-5 py-24 md:px-8 md:py-32">
       <div className="grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
         <Reveal>
           <p className="text-xs font-semibold uppercase tracking-[0.34em] text-ice">Aluguel</p>
@@ -210,6 +213,7 @@ export function Space() {
             </Button>
           </div>
         </Reveal>
+      </div>
       </div>
     </section>
   );

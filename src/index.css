@@ -233,3 +233,66 @@ body {
     transition: none;
   }
 }
+
+/*
+ * Texturas de vidro das seções (After Movies: canelado; Aluguel: facetas de cristal).
+ * A camada .tx ocupa a largura toda da seção e esmaece no topo e embaixo, para emendar com as vizinhas.
+ */
+.tx {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+}
+/* luzes coloridas que passam por trás do vidro, bem devagar */
+.tx-glow {
+  position: absolute;
+  inset: -10%;
+  background: var(--tx-glow);
+  animation: tx-drift 28s ease-in-out infinite alternate;
+  will-change: transform;
+}
+@keyframes tx-drift {
+  from {
+    transform: translate3d(-5%, 0, 0) scale(1.05);
+  }
+  to {
+    transform: translate3d(5%, 3%, 0) scale(1.14);
+  }
+}
+/* vidro canelado: cada canelura clareia de um lado e escurece do outro, como um cilindro */
+.tx-fluted {
+  --rib: 28px;
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 calc(var(--rib) - 2px),
+      rgba(255, 255, 255, 0.2) calc(var(--rib) - 2px) calc(var(--rib) - 1px),
+      rgba(0, 0, 0, 0.32) calc(var(--rib) - 1px) var(--rib)
+    ),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05) 18%, rgba(0, 0, 0, 0.03) 55%, rgba(0, 0, 0, 0.34));
+  background-size:
+    var(--rib) 100%,
+    var(--rib) 100%;
+}
+@media (max-width: 640px) {
+  .tx-fluted {
+    --rib: 20px;
+  }
+}
+/* facetas de cristal: o mesmo cacos da abertura, parados e translúcidos */
+.tx-facets {
+  position: absolute;
+  inset: 0;
+  background-position: center;
+  background-size: cover;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tx-glow {
+    animation: none;
+  }
+}
