@@ -36,9 +36,16 @@ A disposição segue o mapa oficial. Para mexer em posição ou tamanho, edite `
 
 O mapa da edição especial (vinil rosa) não foi usado de propósito: esta versão é a planta padrão da casa.
 
-## Abertura (`src/components/Intro.tsx` e `src/shatter.ts`)
+## Abertura (`src/components/Intro.tsx`, `src/glass3d.ts` e `src/shatter.ts`)
 
-Um vidro escuro com o logo. Toque ou clique (ou espere ~3,4 s) e ele racha a partir do ponto tocado, quebra em cacos que caem em 3D e o site aparece por trás. `Pular` (ou Esc/Enter/Espaço) quebra na hora. Toca a cada abertura ou atualização da página (também com `#seção` no endereço: depois do vidro, o site vai para a seção). Só não toca com "reduzir movimento" ligado no sistema. Para mudar o tempo, veja `AUTO_BREAK_MS` e `CRACK_MS`.
+A tela escurece, o logo aparece gravado num vidro e o vidro leva uma pancada, racha e cai em cacos, e então o site aparece. É uma animação só, de uns 3 s, sem precisar tocar.
+
+O vidro é 3D de verdade (WebGL, com Three.js): cada caco é uma placa com espessura, em perspectiva, com reflexo de ambiente e gravidade, e o logo quebra junto. A geometria da quebra vem de `shatter.ts` (rachaduras, cacos e lascas) e a cena de `glass3d.ts`. O Three.js é carregado só na abertura, em um arquivo separado.
+
+- Toca em toda abertura e em toda atualização (F5). A página sempre volta ao topo e o `#seção` do endereço é limpo.
+- Esc, Enter, espaço ou um toque quebram o vidro na hora.
+- Não toca com "reduzir movimento" ligado no sistema, e, se o WebGL não estiver disponível, o site abre direto.
+- Tempos em `LEAD_MS` (até a pancada) e `CRACK_MS` (rachaduras antes da queda), em `Intro.tsx`. Gravidade e espessura do vidro em `glass3d.ts`.
 
 ## Rastreamento
 
