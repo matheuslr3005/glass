@@ -19,8 +19,12 @@ export interface Shard {
 
 export interface Fracture {
   shards: Shard[];
-  /** Rachaduras radiais (do impacto até a borda). */
+  /** Lascas pequenas que saltam do ponto de impacto. */
+  chips: Shard[];
+  /** Rachaduras radiais irregulares (do impacto até a borda). */
   spokes: string[];
+  /** Pequenas ramificações que saem das rachaduras radiais. */
+  branches: string[];
   /** Rachaduras em anel, da mais próxima à mais distante. */
   rings: string[];
 }
@@ -106,11 +110,62 @@ export function buildFracture(w: number, h: number, ix: number, iy: number, spok
     }
   }
 
-  const spokePaths = Array.from({ length: spokes }, (_, j) => `M${V.map((row) => fmt(row[j]!)).join(" L")}`);
+  // rachaduras radiais: o caminho entre dois anéis nunca é reto, tem um desvio no meio
+  const spokePaths = Array.from({ length: spokes }, (_, j) => {
+    const pts: [number, number][] = [V[0]![j]!];
+    for (let k = 1; k <= rings; k++) {
+      const a = V[k - 1]![j]!;
+      const b = V[k]![j]!;
+      const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
+      const nx = -(b[1] - a[1]) / (len || 1);
+      const ny = (b[0] - a[0]) / (len || 1);
+      const off = (rand() - 0.5) * Math.min(14, len * 0.16);
+      pts.push([(a[0] + b[0]) / 2 + nx * off, (a[1] + b[1]) / 2 + ny * off], b);
+    }
+    return `M${pts.map(fmt).join(" L")}`;
+  });
+
+  // ramificações curtas, saindo de alguns pontos das rachaduras radiais
+  const branchPaths: string[] = [];
+  for (let j = 0; j < spokes; j++) {
+    const count = rand() < 0.55 ? 2 : 1;
+    for (let n = 0; n < count; n++) {
+      const k = 2 + Math.floor(rand() * Math.max(1, rings - 3));
+      const from = V[k]![j]!;
+      const gap = radius(k + 1) - radius(k);
+      const dir = base[j]! + (rand() < 0.5 ? -1 : 1) * (0.45 + rand() * 0.6);
+      const len = gap * (0.35 + rand() * 0.7);
+      const mid: [number, number] = [from[0] + Math.cos(dir) * len * 0.5 + (rand() - 0.5) * 6, from[1] + Math.sin(dir) * len * 0.5 + (rand() - 0.5) * 6];
+      const end: [number, number] = [from[0] + Math.cos(dir + (rand() - 0.5) * 0.4) * len, from[1] + Math.sin(dir + (rand() - 0.5) * 0.4) * len];
+      branchPaths.push(`M${fmt(from)} L${fmt(mid)} L${fmt(end)}`);
+    }
+  }
+
   const ringPaths = Array.from({ length: rings }, (_, i) => {
     const row = V[i + 1]!;
     return `M${row.map(fmt).join(" L")} L${fmt(row[0]!)}`;
   });
 
-  return { shards, spokes: spokePaths, rings: ringPaths };
+  // lascas: triângulos pequenos perto do impacto
+  const chips: Shard[] = [];
+  const chipCount = 34;
+  for (let i = 0; i < chipCount; i++) {
+    const a = rand() * Math.PI * 2;
+    const r = 4 + Math.pow(rand(), 1.6) * 150;
+    const cx = ix + Math.cos(a) * r;
+    const cy = iy + Math.sin(a) * r;
+    const size = 3 + rand() * 10;
+    const pts: [number, number][] = [0, 1, 2].map((n) => {
+      const pa = rand() * 2 + n * 2.1;
+      const pr = size * (0.5 + rand() * 0.7);
+      return [cx + Math.cos(pa) * pr, cy + Math.sin(pa) * pr];
+    });
+    const xs = pts.map((p) => p[0]);
+    const ys = pts.map((p) => p[1]);
+    const x = Math.min(...xs);
+    const y = Math.min(...ys);
+    chips.push({ id: i, points: pts, x, y, w: Math.max(...xs) - x, h: Math.max(...ys) - y, cx, cy, dist: 0 });
+  }
+
+  return { shards, chips, spokes: spokePaths, branches: branchPaths, rings: ringPaths };
 }

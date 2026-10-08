@@ -19,7 +19,7 @@ const trianglePath = (s: number): string =>
 export function Pyramid({ className = "", glow = false }: { className?: string; glow?: boolean }) {
   const id = useId().replace(/:/g, "");
   return (
-    <svg viewBox="0 0 100 86" className={className} aria-hidden="true" overflow="visible">
+    <svg viewBox="0 3 100 78" className={className} aria-hidden="true" overflow="visible">
       <defs>
         <linearGradient id={`chrome-${id}`} x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stopColor="#ffffff" />
