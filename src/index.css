@@ -1,0 +1,235 @@
+@import "tailwindcss";
+
+/*
+ * Glass design tokens.
+ * Tema único: obsidiana escura, vidro translúcido e luz prismática.
+ * Cada evento traz a própria cor de destaque (--accent), vinda do cartaz.
+ */
+@theme {
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Manrope Variable", system-ui, sans-serif;
+
+  --color-ink: #050507;
+  --color-obsidian: #0a0a10;
+  --color-smoke: #12121b;
+  --color-mist: #f2f5fb;
+  --color-steel: #a7afc2;
+  --color-ice: #7fe3ff;
+  --color-violet: #b79cff;
+  --color-blush: #ff7ad9;
+  --color-amber: #ffcf7a;
+
+  --radius-card: 28px;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root {
+  --accent: #ff5fc8;
+  --z-float: 38;
+  --z-nav: 40;
+  --z-progress: 50;
+  --z-modal: 60;
+  --z-intro: 70;
+  --z-cursor: 80;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--color-ink);
+}
+
+body {
+  margin: 0;
+  overflow-x: clip;
+  font-family: var(--font-sans);
+  color: var(--color-mist);
+  background: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-ice);
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-ice);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Cursor de vidro: só com mouse; esconde o cursor do sistema nos elementos da página. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  html.has-glass-cursor,
+  html.has-glass-cursor a,
+  html.has-glass-cursor button,
+  html.has-glass-cursor [role="tab"] {
+    cursor: none;
+  }
+}
+
+/* Vidro: superfície translúcida com brilho que acompanha o ponteiro (--gx, --gy). */
+.glass {
+  position: relative;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.025));
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.04),
+    0 30px 80px -40px rgba(0, 0, 0, 0.9);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+  backdrop-filter: blur(22px) saturate(150%);
+}
+.glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(420px circle at var(--gx, 30%) var(--gy, 0%), rgba(255, 255, 255, 0.14), transparent 60%);
+  opacity: var(--glare, 0);
+  transition: opacity 0.4s ease;
+}
+.glass:hover {
+  --glare: 1;
+}
+
+/* Gradiente prismático (cor da luz atravessando o vidro). */
+.prism-text {
+  background: linear-gradient(100deg, #7fe3ff 0%, #b79cff 38%, #ff7ad9 70%, #ffcf7a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Faixa de patrocinadores */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 42s linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* Brilho que atravessa o vidro da abertura. */
+@keyframes glint {
+  from {
+    transform: translateX(-120%) skewX(-18deg);
+  }
+  to {
+    transform: translateX(260%) skewX(-18deg);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+.hide-scrollbar {
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Mapa 3D da casa: blocos de vidro com seis faces. A cor de cada área vem de --c. */
+.vm-box {
+  position: absolute;
+  transform-style: preserve-3d;
+  transform: translateZ(var(--z, 0em));
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.vm-box.vm-lit {
+  transform: translateZ(calc(var(--z, 0em) + 1.8em));
+}
+.vm-face {
+  position: absolute;
+  box-sizing: border-box;
+  border: max(1px, 0.16em) solid color-mix(in srgb, var(--c) 55%, white 30%);
+  background: color-mix(in srgb, var(--c) 13%, rgba(255, 255, 255, 0.04));
+  transition:
+    background 0.35s,
+    border-color 0.35s,
+    box-shadow 0.35s;
+}
+.vm-top {
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--c) 28%, rgba(255, 255, 255, 0.14)),
+    color-mix(in srgb, var(--c) 10%, rgba(255, 255, 255, 0.03))
+  );
+}
+.vm-lit > .vm-face {
+  background: color-mix(in srgb, var(--c) 36%, rgba(255, 255, 255, 0.1));
+  border-color: color-mix(in srgb, var(--c) 85%, white);
+  box-shadow: 0 0 2.6em color-mix(in srgb, var(--c) 70%, transparent);
+}
+.vm-floor > .vm-face {
+  border-style: dashed;
+  background: color-mix(in srgb, var(--c) 7%, rgba(255, 255, 255, 0.02));
+}
+.vm-floor > .vm-face:not(.vm-top) {
+  display: none;
+}
+.vm-slab > .vm-face {
+  border-color: rgba(255, 255, 255, 0.35);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03));
+}
+.vm-slab > .vm-top {
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.07) 0 1px, transparent 1px 4em),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.07) 0 1px, transparent 1px 4em),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.025));
+}
+.vm-disc {
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--c) 22%, #0c0f18);
+}
+.vm-record {
+  background: repeating-radial-gradient(circle closest-side, #090b12 0 0.55em, #1b2132 0.55em 0.7em);
+  box-shadow: inset 0 0 0 0.3em rgba(255, 255, 255, 0.35);
+  animation: spin 7s linear infinite;
+}
+.vm-sheen {
+  background: conic-gradient(from 0deg, transparent 0 18%, rgba(255, 255, 255, 0.2) 25%, transparent 32% 68%, rgba(255, 255, 255, 0.2) 75%, transparent 82%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .vm-record {
+    animation: none;
+  }
+  .vm-box {
+    transition: none;
+  }
+}
