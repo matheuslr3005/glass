@@ -14,12 +14,14 @@ interface IntroState {
 const IntroContext = createContext<IntroState>({ phase: "done", revealed: true, setPhase: () => undefined });
 export const useIntro = () => useContext(IntroContext);
 
-/** A abertura toca ao abrir o site. Não toca com "reduzir movimento" nem em links com #seção. */
+/** A abertura toca a cada vez que o site abre ou é atualizado. Só não toca com "reduzir movimento". */
 function shouldPlay(): boolean {
   if (typeof window === "undefined") return false;
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
-  return !window.location.hash;
+  return !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
+
+/** Seção do endereço (#mapa, #eventos...) no momento em que a página abriu. */
+const INITIAL_HASH = typeof window === "undefined" ? "" : window.location.hash;
 
 export function IntroProvider({ children }: { children: ReactNode }) {
   const [phase, setPhaseState] = useState<Phase>(() => (shouldPlay() ? "playing" : "done"));
@@ -72,12 +74,19 @@ export function Intro() {
   }, []);
 
   // trava a rolagem enquanto a abertura toca
+  const played = useRef(false);
   useEffect(() => {
     if (phase === "done") {
       document.documentElement.style.overflow = "";
       if ("scrollRestoration" in history) history.scrollRestoration = "auto";
+      // a abertura segura a rolagem no topo: depois dela, vai para a seção do endereço
+      if (played.current && INITIAL_HASH) {
+        played.current = false;
+        requestAnimationFrame(() => document.getElementById(decodeURIComponent(INITIAL_HASH.slice(1)))?.scrollIntoView({ behavior: "instant" }));
+      }
       return;
     }
+    played.current = true;
     const html = document.documentElement;
     const previous = html.style.overflow;
     html.style.overflow = "hidden";

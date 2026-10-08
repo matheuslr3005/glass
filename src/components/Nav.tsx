@@ -9,8 +9,9 @@ import { TicketButton } from "./TicketButton";
 
 const LINKS = [
   { id: "eventos", label: "Eventos" },
+  { id: "aftermovies", label: "After Movies" },
   { id: "mapa", label: "Mapa 3D" },
-  { id: "espaco", label: "Alugue o espaço" },
+  { id: "espaco", label: "Aluguel" },
   { id: "contato", label: "Contato" },
 ];
 

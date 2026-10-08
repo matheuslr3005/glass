@@ -5,6 +5,7 @@ import { Hero } from "./components/Hero";
 import { Marquee } from "./components/Marquee";
 import { Manifesto } from "./components/Manifesto";
 import { Events } from "./components/Events";
+import { AfterMovies } from "./components/AfterMovies";
 import { MapSection } from "./components/MapSection";
 import { Space } from "./components/Space";
 import { Footer } from "./components/Footer";
@@ -39,6 +40,7 @@ export default function App() {
             <Marquee />
             <Manifesto />
             <Events />
+            <AfterMovies />
             <MapSection />
             <Space />
           </main>

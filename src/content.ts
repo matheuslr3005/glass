@@ -80,6 +80,31 @@ export const EVENTS: GlassEvent[] = [
   },
 ];
 
+/**
+ * After Movies de festas que já rolaram. Cada item usa `eventId` (um evento de EVENTS: dá título, data e capa)
+ * e um vídeo: `youtube` (ID do vídeo) ou `mp4` (arquivo em public/media/videos/). Sem vídeo, mostra "em breve".
+ * Para mudar a capa, use `poster`. A galeria mostra no mínimo 6 lugares; os vazios aparecem como "Em breve".
+ */
+export interface AfterMovie {
+  id: string;
+  eventId?: string;
+  title?: string;
+  dateLabel?: string;
+  youtube?: string;
+  mp4?: string;
+  poster?: string;
+}
+
+export const AFTER_MOVIE_SLOTS = 6;
+
+export const AFTER_MOVIES: AfterMovie[] = [
+  // TODO: colocar o vídeo de cada edição (youtube ou mp4).
+  { id: "baile-26-set", eventId: "baile-26-set" },
+  { id: "inferninho-19-set", eventId: "inferninho-19-set" },
+  // Depois da Nostalgia (10/10), é só descomentar:
+  // { id: "nostalgia-10-out", eventId: "nostalgia-10-out", youtube: "ID_DO_VIDEO" },
+];
+
 /** O vídeo do espaço. Preencha `mp4` (arquivo em public/media/) ou `youtube` (ID do vídeo). Vazio = "em breve". */
 export const SPACE_VIDEO: { mp4?: string; youtube?: string; poster?: string } = {
   // mp4: asset("media/espaco.mp4"),
