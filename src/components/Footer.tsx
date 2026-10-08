@@ -47,6 +47,18 @@ export function Footer() {
           </p>
           <p>Ingressos pela {SITE.ticketing} · {SPONSORS.slice(0, 2).join(" · ")} e mais</p>
         </div>
+        <p className="mt-5 text-center text-sm text-steel">
+          Produzido por{" "}
+          <a
+            href={SITE.producer.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => track("producer_click", { location: "rodape" })}
+            className="font-semibold text-mist underline decoration-white/30 underline-offset-4 transition-colors hover:decoration-white"
+          >
+            {SITE.producer.name}
+          </a>
+        </p>
       </div>
     </footer>
   );

@@ -19,6 +19,8 @@ export const SITE = {
   analyticsId: "",
   // Bilheteria oficial dos eventos.
   ticketing: "Bilheteria Digital",
+  // Quem produz o site, citado no rodapé ("Produzido por LAX").
+  producer: { name: "LAX", instagram: "https://www.instagram.com/laxassessoria/" },
 };
 
 export const SPONSORS = ["Jägermeister", "Chandon", "Bilheteria Digital", "Belvedere Vodka", "Red Bull"];
